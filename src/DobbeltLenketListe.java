@@ -7,6 +7,20 @@ import java.util.Objects;
 
 public class DobbeltLenketListe<T> implements Liste<T>
 {
+
+    public static void main (String[] args){
+        String[] s1 = {}, s2 = {"A"}, s3 = {null,"A",null,"B",null};
+        DobbeltLenketListe<String> l1 = new DobbeltLenketListe<>(s1);
+        DobbeltLenketListe<String> l2 = new DobbeltLenketListe<>(s2);
+        DobbeltLenketListe<String> l3 = new DobbeltLenketListe<>(s3);
+
+        System.out.println(l1.toString() + " " + l2.toString()
+                + " " + l3.toString() + " " + l1.omvendtString() + " "
+                + l2.omvendtString() + " " + l3.omvendtString());
+
+
+    }
+
     private static final class Node<T>   // en indre nodeklasse
     {
         // instansvariabler
@@ -26,6 +40,8 @@ public class DobbeltLenketListe<T> implements Liste<T>
         }
 
     } // Node
+
+
 
     // instansvariabler
     private Node<T> hode;          // peker til den første i listen
@@ -50,7 +66,53 @@ public class DobbeltLenketListe<T> implements Liste<T>
     // konstruktør
     public DobbeltLenketListe(T[] a)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+
+        if (a.length==0){
+           // throw new NullPointerException(("kAN IKKE VÆRE TOM"));
+            return;
+
+        }
+       // lager tom linket list
+        int teller=0;
+        while (a[teller]==null){
+
+            teller++;
+
+        }
+
+       Node hode=new Node(a[teller]);
+        int antall=1;
+       Node hale=hode;
+        this.hode=hode;
+        this.hale=hode;
+       // lag peker og sett verdi
+        Node forrigeNode= hode;
+        forrigeNode.verdi=a[teller];
+        this.hale.verdi=a[teller];
+
+        for (int i=teller+1; i<a.length;i++){
+            while(a[i]==null && i<a.length-1){
+                i++;
+            }
+            if (i==a.length-1 && a[i]==null){
+                break;
+            }
+
+            Node nyNode=new Node(a[i]);
+
+            nyNode.forrige=forrigeNode;
+            forrigeNode.neste=nyNode;
+
+            forrigeNode=nyNode;
+            hale= nyNode;
+            antall++;
+
+        }
+        this.antall=antall;
+        hale.neste=null;
+        this.hale=hale;
+        this.hale.verdi=(T)hale.verdi;
+
     }
 
     // subliste
@@ -62,13 +124,17 @@ public class DobbeltLenketListe<T> implements Liste<T>
     @Override
     public int antall()
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+        return antall;
+        // while node.hasNext() antall++;
     }
 
     @Override
     public boolean tom()
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+        if (antall==0){
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -128,12 +194,59 @@ public class DobbeltLenketListe<T> implements Liste<T>
     @Override
     public String toString()
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+        //String ut=" ";
+        StringBuilder ut=new StringBuilder();
+        Node current=hode;
+       // System.out.println(hode.verdi);
+     //   ut+=""+current.verdi+" ";
+        if (hode==null){
+            return "";
+        }
+        if (current.neste==null){
+            ut.append(hode.verdi);
+          return ut.toString();
+        }
+
+
+        while (current.neste!=null){
+        ut.append(current.verdi+" ");
+            //System.out.println(current.verdi);
+            current=current.neste;
+        }
+        if (!hode.equals(hale)){
+            ut.append(current.verdi);
+        }
+
+        return ut.toString();
     }
 
     public String omvendtString()
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+       StringBuilder ut=new StringBuilder();
+        Node current=hale;
+        // System.out.println(hode.verdi);
+        //   ut+=""+current.verdi+" ";
+        if (hale == null){
+            return "";
+        }
+        if (current.forrige==null){
+            ut.append(hale.verdi);
+            return ut.toString();
+        }
+
+
+        while (current.forrige!=null){
+            ut.append(current.verdi+" ");
+            //System.out.println(current.verdi);
+            current=current.forrige;
+        }
+        if (!hode.equals(hale)){
+            ut.append(current.verdi);
+        }
+
+        return ut.toString();
+
+
     }
 
     public static <T> void sorter(Liste<T> liste, Comparator<? super T> c)

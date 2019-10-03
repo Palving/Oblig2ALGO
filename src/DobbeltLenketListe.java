@@ -50,7 +50,28 @@ public class DobbeltLenketListe<T> implements Liste<T>
     // hjelpemetode
     private Node<T> finnNode(int indeks){
 
-        int skille=antall/2;
+        Node current=hode;
+        int teller=0;
+
+        if (indeks==antall-1){
+            return this.hale;
+        }
+        while (current.neste!=null){
+            if (teller==indeks){
+
+                return current;
+            }
+
+
+            current=current.neste;
+            teller++;
+
+
+        }
+
+        // TODO: Surr med skilleverdi
+
+       /* int skille=antall/2;
 
         if (indeks < skille) {
 
@@ -87,7 +108,7 @@ public class DobbeltLenketListe<T> implements Liste<T>
                 teller--;
 
             }
-        }
+        }*/
 
         return null;
     }
@@ -105,18 +126,19 @@ public class DobbeltLenketListe<T> implements Liste<T>
     {
 
         if (a.length==0){
-           // throw new NullPointerException(("kAN IKKE VÆRE TOM"));
-            return;
+           throw new NullPointerException(("kAN IKKE VÆRE TOM"));
+
 
         }
        // lager tom linket list
+        // loop fram til første element som ikke er null
         int teller=0;
-        while (a[teller]==null){
+        while (a[teller]==null && teller<a.length){
 
             teller++;
 
         }
-
+        // hode er da første element som ikke er null
        Node hode=new Node(a[teller]);
         int antall=1;
        Node hale=hode;
@@ -148,7 +170,7 @@ public class DobbeltLenketListe<T> implements Liste<T>
         this.antall=antall;
         hale.neste=null;
         this.hale=hale;
-        this.hale.verdi=(T)hale.verdi;
+       // this.hale.verdi=(T)hale.verdi;
 
     }
 
@@ -161,7 +183,7 @@ public class DobbeltLenketListe<T> implements Liste<T>
 
         if (til > antall)                          // til er utenfor tabellen
             throw new IndexOutOfBoundsException
-                    ("til(" + til + ") > tablengde(" + antall + ")");
+                    ("til(" + til + ") > antall(" + antall + ")");
 
         if (fra > til)                                // fra er større enn til
             throw new IllegalArgumentException
@@ -170,10 +192,13 @@ public class DobbeltLenketListe<T> implements Liste<T>
 
         // lag tom liste
         DobbeltLenketListe<T> liste=new DobbeltLenketListe<>();
-        for (int i=fra;i<=til;i++){
+        for (int i=fra;i<til;i++){
             Node newNode=finnNode(i);
             liste.leggInn((T)newNode.verdi);
+
+
         }
+
         return liste;
     }
 
@@ -253,6 +278,7 @@ public class DobbeltLenketListe<T> implements Liste<T>
     @Override
     public T oppdater(int indeks, T nyverdi)
     {
+        Objects.requireNonNull(nyverdi);
         if (nyverdi==null){
             return (T)"Ny verdi kan ikke være null";
         }
@@ -286,6 +312,8 @@ public class DobbeltLenketListe<T> implements Liste<T>
         throw new UnsupportedOperationException("Ikke laget ennå!");
     }
 
+
+    //TODO: Fiks output med [ og riktig , og mellomrom, syra
     @Override
     public String toString()
     {
@@ -293,12 +321,13 @@ public class DobbeltLenketListe<T> implements Liste<T>
         StringBuilder ut=new StringBuilder();
         Node current=hode;
        // System.out.println(hode.verdi);
+        ut.append("[");
      //   ut+=""+current.verdi+" ";
         if (hode==null){
             return "";
         }
         if (current.neste==null){
-            ut.append(hode.verdi);
+            ut.append(hode.verdi+"]");
           return ut.toString();
         }
 
@@ -309,34 +338,35 @@ public class DobbeltLenketListe<T> implements Liste<T>
             current=current.neste;
         }
         if (!hode.equals(hale)){
-            ut.append(current.verdi);
+            ut.append(","+current.verdi);
         }
 
-        return ut.toString();
+        return ut.toString()+"]";
     }
 
     public String omvendtString()
     {
        StringBuilder ut=new StringBuilder();
         Node current=hale;
+        ut.append("[");
         // System.out.println(hode.verdi);
         //   ut+=""+current.verdi+" ";
         if (hale == null){
             return "";
         }
         if (current.forrige==null){
-            ut.append(hale.verdi);
+            ut.append(hale.verdi+"]");
             return ut.toString();
         }
 
 
         while (current.forrige!=null){
-            ut.append(current.verdi+" ");
+            ut.append(current.verdi+"");
             //System.out.println(current.verdi);
             current=current.forrige;
         }
         if (!hode.equals(hale)){
-            ut.append(current.verdi);
+            ut.append(", "+current.verdi);
         }
 
         return ut.toString();

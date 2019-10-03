@@ -13,7 +13,10 @@ public class DobbeltLenketListe<T> implements Liste<T>
         Character[] c = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',};
         DobbeltLenketListe<Character> liste = new DobbeltLenketListe<>(c);
 
-  //  System.out.print(liste.inneholder('J1'));
+   System.out.print(liste);
+   liste.leggInn(9,'K');
+   System.out.print(liste);
+
 
     }
 
@@ -249,7 +252,67 @@ public class DobbeltLenketListe<T> implements Liste<T>
     @Override
     public void leggInn(int indeks, T verdi)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+
+        if (indeks < 0)                                  // fra er negativ
+            throw new IndexOutOfBoundsException
+                    ("indeks(" + indeks + ") er negativ!");
+
+        if (indeks > antall)                          // til er utenfor tabellen
+            throw new IndexOutOfBoundsException
+                    ("indeks(" + indeks + ") > antall(" + antall + ")");
+
+       // kontroll
+        Objects.requireNonNull(verdi);
+        indeksKontroll(indeks,false);
+
+        // kode
+
+        // indeks er på hode
+        if (indeks==0){
+            Node nyNode=new Node(verdi);
+            Node gamleHode=this.hode;
+
+            nyNode.forrige=null;
+            nyNode.neste=gamleHode.neste;
+            hode=nyNode;
+
+        }
+        // indeks er på hale
+        else if (indeks==antall-1){
+
+            Node nyNode=new Node(verdi);
+            Node gamleHale=this.hale;
+
+            // funker men ja..
+            gamleHale.forrige.neste=nyNode;
+            nyNode.neste=null;
+
+            hale=nyNode;
+
+
+         }
+
+        // indeks er mellom to noder
+        else if(indeks>0 && indeks < antall-1){
+            System.out.print("mellom");
+            Node gammelNode=finnNode(indeks);
+            Node forrige= gammelNode.forrige;
+            Node neste = gammelNode.neste;
+
+            Node nyNode=new Node(verdi);
+
+            nyNode.forrige=forrige;
+            nyNode.neste= neste;
+
+            forrige.neste=nyNode;
+            neste.forrige=nyNode;
+        }
+
+
+        endringer++;
+
+
+
     }
 
     @Override

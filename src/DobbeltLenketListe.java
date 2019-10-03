@@ -13,9 +13,7 @@ public class DobbeltLenketListe<T> implements Liste<T>
         Character[] c = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',};
         DobbeltLenketListe<Character> liste = new DobbeltLenketListe<>(c);
 
-        System.out.println(liste.subliste(3,8));
-        System.out.println(liste.subliste(5,5));
-        System.out.println(liste.subliste(8,liste.antall()));
+  //  System.out.print(liste.inneholder('J1'));
 
     }
 
@@ -257,7 +255,12 @@ public class DobbeltLenketListe<T> implements Liste<T>
     @Override
     public boolean inneholder(T verdi)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+
+        if (indeksTil(verdi)!=-1){
+            return true;
+        }
+        return false;
+
     }
 
 
@@ -272,7 +275,26 @@ public class DobbeltLenketListe<T> implements Liste<T>
     @Override
     public int indeksTil(T verdi)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+        if (verdi==null){
+            return -1;
+        }
+
+       Node current=hode;
+       int teller=0;
+
+       if (hale.verdi==verdi){
+           return antall-1;
+       }
+
+       while (current.neste!=null){
+           if (current.verdi==verdi){
+               return teller;
+           }
+           current=current.neste;
+           teller++;
+       }
+
+    return -1;
     }
 
     @Override

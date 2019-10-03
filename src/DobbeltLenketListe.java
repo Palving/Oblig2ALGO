@@ -265,10 +265,11 @@ public class DobbeltLenketListe<T> implements Liste<T>
         Objects.requireNonNull(verdi);
         indeksKontroll(indeks,false);
 
+
         // kode
 
         // indeks er på hode
-        if (indeks==0){
+        if (indeks==(0)){
             Node nyNode=new Node(verdi);
             Node gamleHode=this.hode;
 
@@ -341,14 +342,19 @@ public class DobbeltLenketListe<T> implements Liste<T>
         if (verdi==null){
             return -1;
         }
+        if (antall==0){
+            return -1;
+        }
 
        Node current=hode;
-       int teller=0;
 
-       if (hale.verdi==verdi){
+
+       if (hale.verdi.equals(verdi)){
            return antall-1;
        }
 
+       // peker på indeks
+        int teller=0;
        while (current.neste!=null){
            if (current.verdi==verdi){
                return teller;
@@ -369,26 +375,90 @@ public class DobbeltLenketListe<T> implements Liste<T>
         }
 
       indeksKontroll(indeks,false);
-      Node gammelNode=finnNode(indeks);
-      Node nyNode=new Node(nyverdi);
-      nyNode.forrige=gammelNode.forrige;
-      nyNode.neste=gammelNode.neste;
+        T gammelVerdi=finnNode(indeks).verdi;
+        finnNode(indeks).verdi=nyverdi;
 
       endringer++;
 
-      return (T)gammelNode.verdi;
+      return gammelVerdi;
     }
+
+
 
     @Override
     public boolean fjern(T verdi)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+
+        if (verdi.equals(null)){
+            return false;
+        }
+     Node current=hode;
+
+        // verdi er hode
+        if (current.verdi.equals(verdi)){
+            // remove hode
+
+            hode.neste=hode;
+
+            hode.forrige=null;
+
+
+            antall--;
+            endringer++;
+
+            return true;
+
+        }
+
+        while (current.neste!=null){
+            if (current.verdi.equals(verdi)){
+               // Node nodeToDelete=current;
+                Node forrige=current.forrige;
+                Node neste=current.neste;
+
+                forrige.neste=neste;
+                neste.forrige=forrige;
+
+                current.neste=null;
+                current.forrige=null;
+
+                antall--;
+                endringer++;
+
+                return true;
+            }
+            current=current.neste;
+        }
+       return false;
     }
 
+    // TODO: Skjønner ikke, skal verdien fjernes eller hele noden? Gjerne slett hele innholdet i metoden under her
     @Override
     public T fjern(int indeks)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+        indeksKontroll(indeks,false);
+        T verdi;
+        // hode
+        if (indeks==0){
+            verdi=hode.verdi;
+            hode.verdi=null;
+            antall--;
+            endringer++;
+            return verdi;
+        }
+        else if(indeks==antall-1){
+            verdi=hale.verdi;
+            hale.verdi=null;
+            antall--;
+            endringer++;
+            return verdi;
+        }
+        antall--;
+        endringer++;
+        return finnNode(indeks).verdi;
+
+
+
     }
 
     @Override
@@ -402,56 +472,53 @@ public class DobbeltLenketListe<T> implements Liste<T>
     @Override
     public String toString()
     {
-        //String ut=" ";
+
         StringBuilder ut=new StringBuilder();
         Node current=hode;
-       // System.out.println(hode.verdi);
-        ut.append("[");
-     //   ut+=""+current.verdi+" ";
+
         if (hode==null){
             return "";
         }
         if (current.neste==null){
-            ut.append(hode.verdi+"]");
+            ut.append(hode.verdi);
           return ut.toString();
         }
 
 
         while (current.neste!=null){
-        ut.append(current.verdi+" ");
-            //System.out.println(current.verdi);
+        ut.append(current.verdi);
             current=current.neste;
         }
         if (!hode.equals(hale)){
-            ut.append(","+current.verdi);
+            ut.append(current.verdi);
         }
 
-        return ut.toString()+"]";
+        return ut.toString();
     }
 
     public String omvendtString()
     {
        StringBuilder ut=new StringBuilder();
         Node current=hale;
-        ut.append("[");
+
         // System.out.println(hode.verdi);
         //   ut+=""+current.verdi+" ";
         if (hale == null){
             return "";
         }
         if (current.forrige==null){
-            ut.append(hale.verdi+"]");
+            ut.append(hale.verdi);
             return ut.toString();
         }
 
 
         while (current.forrige!=null){
-            ut.append(current.verdi+"");
+           ut.append(current.verdi);
             //System.out.println(current.verdi);
             current=current.forrige;
         }
         if (!hode.equals(hale)){
-            ut.append(", "+current.verdi);
+            ut.append(current.verdi);
         }
 
         return ut.toString();

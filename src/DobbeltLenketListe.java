@@ -10,12 +10,20 @@ public class DobbeltLenketListe<T> implements Liste<T>
 
     public static void main (String[] args) {
         //               0     1    2    3    4    5    6    7    8    9
-        Character[] c = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',};
+       Character[] c = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',};
         DobbeltLenketListe<Character> liste = new DobbeltLenketListe<>(c);
 
-   System.out.print(liste);
-   liste.leggInn(9,'K');
-   System.out.print(liste);
+   System.out.println(liste);
+    liste.fjern(new Character('A'));
+
+    System.out.println("Fjern hode "+liste);
+        liste.fjern(new Character('J'));
+System.out.println("Fjern hale "+liste);
+liste.fjern(new Character('D'));
+System.out.println("Fjern midt i "+liste);
+
+
+
 
 
     }
@@ -57,16 +65,16 @@ public class DobbeltLenketListe<T> implements Liste<T>
         if (indeks==antall-1){
             return this.hale;
         }
+
+
         while (current.neste!=null){
             if (teller==indeks){
 
                 return current;
             }
 
-
             current=current.neste;
             teller++;
-
 
         }
 
@@ -125,7 +133,7 @@ public class DobbeltLenketListe<T> implements Liste<T>
     // konstruktør
     public DobbeltLenketListe(T[] a)
     {
-
+        Objects.requireNonNull(a);
         if (a.length==0){
            throw new NullPointerException(("kAN IKKE VÆRE TOM"));
 
@@ -397,17 +405,19 @@ public class DobbeltLenketListe<T> implements Liste<T>
         // verdi er hode
         if (current.verdi.equals(verdi)){
             // remove hode
-
             hode.neste=hode;
-
             hode.forrige=null;
-
 
             antall--;
             endringer++;
-
             return true;
-
+        }
+        else if (hale.verdi.equals(verdi)){
+            hale.forrige=hale;
+            hale.neste=null;
+            antall--;
+            endringer++;
+            return true;
         }
 
         while (current.neste!=null){
@@ -436,27 +446,39 @@ public class DobbeltLenketListe<T> implements Liste<T>
     @Override
     public T fjern(int indeks)
     {
-        indeksKontroll(indeks,false);
-        T verdi;
-        // hode
-        if (indeks==0){
-            verdi=hode.verdi;
-            hode.verdi=null;
-            antall--;
-            endringer++;
-            return verdi;
-        }
-        else if(indeks==antall-1){
-            verdi=hale.verdi;
-            hale.verdi=null;
-            antall--;
-            endringer++;
-            return verdi;
-        }
-        antall--;
-        endringer++;
-        return finnNode(indeks).verdi;
+    indeksKontroll(indeks,false);
 
+    // hode
+        if (indeks==0){
+            T verdi=hode.verdi;
+           hode=hode.neste;
+            hode.forrige=null;
+            endringer++;
+            antall--;
+
+            return verdi;
+        }
+        else if (indeks==antall-1){
+
+            T verdi=hale.verdi;
+            hale=hale.forrige;
+            hale.neste=null;
+            endringer++;
+            antall--;
+            return verdi;
+
+
+        }
+
+
+
+    Node q = finnNode(indeks);
+        T verdi=(T)q.verdi;
+    q.forrige.neste=q.neste;
+    q.neste.forrige=q.forrige;
+    antall--;
+    endringer++;
+    return verdi;
 
 
     }
@@ -486,6 +508,7 @@ public class DobbeltLenketListe<T> implements Liste<T>
 
 
         while (current.neste!=null){
+        //    System.out.println("1");
         ut.append(current.verdi);
             current=current.neste;
         }

@@ -8,15 +8,14 @@ import java.util.Objects;
 public class DobbeltLenketListe<T> implements Liste<T>
 {
 
-    public static void main (String[] args){
-        String[] s1 = {}, s2 = {"A"}, s3 = {null,"A",null,"B",null};
-        DobbeltLenketListe<String> l1 = new DobbeltLenketListe<>(s1);
-        DobbeltLenketListe<String> l2 = new DobbeltLenketListe<>(s2);
-        DobbeltLenketListe<String> l3 = new DobbeltLenketListe<>(s3);
+    public static void main (String[] args) {
+        //               0     1    2    3    4    5    6    7    8    9
+        Character[] c = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',};
+        DobbeltLenketListe<Character> liste = new DobbeltLenketListe<>(c);
 
-        System.out.println(l1.toString() + " " + l2.toString()
-                + " " + l3.toString() + " " + l1.omvendtString() + " "
-                + l2.omvendtString() + " " + l3.omvendtString());
+   System.out.print(liste);
+   liste.leggInn(9,'K');
+   System.out.print(liste);
 
 
     }
@@ -50,9 +49,69 @@ public class DobbeltLenketListe<T> implements Liste<T>
     private int endringer;   // antall endringer i listen
 
     // hjelpemetode
-    private Node<T> finnNode(int indeks)
-    {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+    private Node<T> finnNode(int indeks){
+
+        Node current=hode;
+        int teller=0;
+
+        if (indeks==antall-1){
+            return this.hale;
+        }
+        while (current.neste!=null){
+            if (teller==indeks){
+
+                return current;
+            }
+
+
+            current=current.neste;
+            teller++;
+
+
+        }
+
+        // TODO: Surr med skilleverdi
+
+       /* int skille=antall/2;
+
+        if (indeks < skille) {
+
+            Node current=hode;
+
+            int teller=0;
+
+
+            while (current.neste!=null){
+                if (teller==indeks){
+                    System.out.println("Indeks:"+indeks+" Verdi:"+current.verdi);
+                    return current;
+                }
+                current=current.neste;
+                teller++;
+
+
+            }
+
+
+        }
+        else if(indeks >= skille ){
+
+            Node current=hale;
+            int teller=antall;
+
+            while (current.forrige!=null){
+                if (teller==indeks){
+
+                    System.out.println("Indeks:"+indeks+" Verdi:"+current.verdi);
+                    return current;
+                }
+                current=current.forrige;
+                teller--;
+
+            }
+        }*/
+
+        return null;
     }
 
     // konstruktør
@@ -68,18 +127,19 @@ public class DobbeltLenketListe<T> implements Liste<T>
     {
 
         if (a.length==0){
-           // throw new NullPointerException(("kAN IKKE VÆRE TOM"));
-            return;
+           throw new NullPointerException(("kAN IKKE VÆRE TOM"));
+
 
         }
        // lager tom linket list
+        // loop fram til første element som ikke er null
         int teller=0;
-        while (a[teller]==null){
+        while (a[teller]==null && teller<a.length){
 
             teller++;
 
         }
-
+        // hode er da første element som ikke er null
        Node hode=new Node(a[teller]);
         int antall=1;
        Node hale=hode;
@@ -111,21 +171,43 @@ public class DobbeltLenketListe<T> implements Liste<T>
         this.antall=antall;
         hale.neste=null;
         this.hale=hale;
-        this.hale.verdi=(T)hale.verdi;
+       // this.hale.verdi=(T)hale.verdi;
 
     }
 
     // subliste
     public Liste<T> subliste(int fra, int til)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+        if (fra < 0)                                  // fra er negativ
+            throw new IndexOutOfBoundsException
+                    ("fra(" + fra + ") er negativ!");
+
+        if (til > antall)                          // til er utenfor tabellen
+            throw new IndexOutOfBoundsException
+                    ("til(" + til + ") > antall(" + antall + ")");
+
+        if (fra > til)                                // fra er større enn til
+            throw new IllegalArgumentException
+                    ("fra(" + fra + ") > til(" + til + ") - illegalt intervall!");
+
+
+        // lag tom liste
+        DobbeltLenketListe<T> liste=new DobbeltLenketListe<>();
+        for (int i=fra;i<til;i++){
+            Node newNode=finnNode(i);
+            liste.leggInn((T)newNode.verdi);
+
+
+        }
+
+        return liste;
     }
 
     @Override
     public int antall()
     {
         return antall;
-        // while node.hasNext() antall++;
+
     }
 
     @Override
@@ -140,49 +222,243 @@ public class DobbeltLenketListe<T> implements Liste<T>
     @Override
     public boolean leggInn(T verdi)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+        Objects.requireNonNull(verdi);
+        // tilfelle 1 tom liste
+        if (hale==null && hode==null){
+
+            Node nyNode=new Node(verdi);
+            nyNode.forrige=null;
+            nyNode.neste=null;
+            hale=nyNode;
+            hode=nyNode;
+            antall++;
+            return true;
+        }
+
+
+
+        // tilfelle 2
+        Node nyNode=new Node(verdi);
+        nyNode.forrige=hale;
+        nyNode.neste=null;
+
+        hale.neste=nyNode;
+        hale=nyNode;
+        antall++;
+
+        return true;
     }
 
     @Override
     public void leggInn(int indeks, T verdi)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+
+        if (indeks < 0)                                  // fra er negativ
+            throw new IndexOutOfBoundsException
+                    ("indeks(" + indeks + ") er negativ!");
+
+        if (indeks > antall)                          // til er utenfor tabellen
+            throw new IndexOutOfBoundsException
+                    ("indeks(" + indeks + ") > antall(" + antall + ")");
+
+       // kontroll
+        Objects.requireNonNull(verdi);
+        indeksKontroll(indeks,false);
+
+
+        // kode
+
+        // indeks er på hode
+        if (indeks==(0)){
+            Node nyNode=new Node(verdi);
+            Node gamleHode=this.hode;
+
+            nyNode.forrige=null;
+            nyNode.neste=gamleHode.neste;
+            hode=nyNode;
+
+        }
+        // indeks er på hale
+        else if (indeks==antall-1){
+
+            Node nyNode=new Node(verdi);
+            Node gamleHale=this.hale;
+
+            // funker men ja..
+            gamleHale.forrige.neste=nyNode;
+            nyNode.neste=null;
+
+            hale=nyNode;
+
+
+         }
+
+        // indeks er mellom to noder
+        else if(indeks>0 && indeks < antall-1){
+            System.out.print("mellom");
+            Node gammelNode=finnNode(indeks);
+            Node forrige= gammelNode.forrige;
+            Node neste = gammelNode.neste;
+
+            Node nyNode=new Node(verdi);
+
+            nyNode.forrige=forrige;
+            nyNode.neste= neste;
+
+            forrige.neste=nyNode;
+            neste.forrige=nyNode;
+        }
+
+
+        endringer++;
+
+
+
     }
 
     @Override
     public boolean inneholder(T verdi)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+
+        if (indeksTil(verdi)!=-1){
+            return true;
+        }
+        return false;
+
     }
+
+
 
     @Override
     public T hent(int indeks)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+      indeksKontroll(indeks,false);
+      return finnNode(indeks).verdi;
     }
 
     @Override
     public int indeksTil(T verdi)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+        if (verdi==null){
+            return -1;
+        }
+        if (antall==0){
+            return -1;
+        }
+
+       Node current=hode;
+
+
+       if (hale.verdi.equals(verdi)){
+           return antall-1;
+       }
+
+       // peker på indeks
+        int teller=0;
+       while (current.neste!=null){
+           if (current.verdi==verdi){
+               return teller;
+           }
+           current=current.neste;
+           teller++;
+       }
+
+    return -1;
     }
 
     @Override
     public T oppdater(int indeks, T nyverdi)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+        Objects.requireNonNull(nyverdi);
+        if (nyverdi==null){
+            return (T)"Ny verdi kan ikke være null";
+        }
+
+      indeksKontroll(indeks,false);
+        T gammelVerdi=finnNode(indeks).verdi;
+        finnNode(indeks).verdi=nyverdi;
+
+      endringer++;
+
+      return gammelVerdi;
     }
+
+
 
     @Override
     public boolean fjern(T verdi)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+
+        if (verdi.equals(null)){
+            return false;
+        }
+     Node current=hode;
+
+        // verdi er hode
+        if (current.verdi.equals(verdi)){
+            // remove hode
+
+            hode.neste=hode;
+
+            hode.forrige=null;
+
+
+            antall--;
+            endringer++;
+
+            return true;
+
+        }
+
+        while (current.neste!=null){
+            if (current.verdi.equals(verdi)){
+               // Node nodeToDelete=current;
+                Node forrige=current.forrige;
+                Node neste=current.neste;
+
+                forrige.neste=neste;
+                neste.forrige=forrige;
+
+                current.neste=null;
+                current.forrige=null;
+
+                antall--;
+                endringer++;
+
+                return true;
+            }
+            current=current.neste;
+        }
+       return false;
     }
 
+    // TODO: Skjønner ikke, skal verdien fjernes eller hele noden? Gjerne slett hele innholdet i metoden under her
     @Override
     public T fjern(int indeks)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+        indeksKontroll(indeks,false);
+        T verdi;
+        // hode
+        if (indeks==0){
+            verdi=hode.verdi;
+            hode.verdi=null;
+            antall--;
+            endringer++;
+            return verdi;
+        }
+        else if(indeks==antall-1){
+            verdi=hale.verdi;
+            hale.verdi=null;
+            antall--;
+            endringer++;
+            return verdi;
+        }
+        antall--;
+        endringer++;
+        return finnNode(indeks).verdi;
+
+
+
     }
 
     @Override
@@ -191,14 +467,15 @@ public class DobbeltLenketListe<T> implements Liste<T>
         throw new UnsupportedOperationException("Ikke laget ennå!");
     }
 
+
+    //TODO: Fiks output med [ og riktig , og mellomrom, syra
     @Override
     public String toString()
     {
-        //String ut=" ";
+
         StringBuilder ut=new StringBuilder();
         Node current=hode;
-       // System.out.println(hode.verdi);
-     //   ut+=""+current.verdi+" ";
+
         if (hode==null){
             return "";
         }
@@ -209,8 +486,7 @@ public class DobbeltLenketListe<T> implements Liste<T>
 
 
         while (current.neste!=null){
-        ut.append(current.verdi+" ");
-            //System.out.println(current.verdi);
+        ut.append(current.verdi);
             current=current.neste;
         }
         if (!hode.equals(hale)){
@@ -224,6 +500,7 @@ public class DobbeltLenketListe<T> implements Liste<T>
     {
        StringBuilder ut=new StringBuilder();
         Node current=hale;
+
         // System.out.println(hode.verdi);
         //   ut+=""+current.verdi+" ";
         if (hale == null){
@@ -236,7 +513,7 @@ public class DobbeltLenketListe<T> implements Liste<T>
 
 
         while (current.forrige!=null){
-            ut.append(current.verdi+" ");
+           ut.append(current.verdi);
             //System.out.println(current.verdi);
             current=current.forrige;
         }

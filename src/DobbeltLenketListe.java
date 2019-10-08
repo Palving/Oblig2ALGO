@@ -420,16 +420,10 @@ System.out.println("Fjern midt i "+liste);
         // verdi er hode
         if (current.verdi.equals(verdi)){
             // remove hode
-            hode=hode.neste;
-            hode.forrige=null;
 
-            antall--;
-            endringer++;
-            return true;
-        }
-        else if (hale.verdi.equals(verdi)){
-            hale=hale.forrige;
-            hale.neste=null;
+                hode=hode.neste;
+                hode.forrige=null;
+
             antall--;
             endringer++;
             return true;
@@ -437,14 +431,9 @@ System.out.println("Fjern midt i "+liste);
 
         while (current.neste!=null){
             if (current.verdi.equals(verdi)){
-               // Node nodeToDelete=current;
-                Node<T> forrige=current.forrige;
-                Node<T> neste=current.neste;
-                forrige.neste=neste;
-                neste.forrige=forrige;
 
-                current.neste=null;
-                current.forrige=null;
+             current.forrige.neste=current.neste;
+             current.neste.forrige=current.forrige;
 
                 antall--;
                 endringer++;
@@ -453,7 +442,15 @@ System.out.println("Fjern midt i "+liste);
             }
             current=current.neste;
         }
-       return false;
+
+     if (hale.verdi.equals(verdi)){
+        hale=hale.forrige;
+        hale.neste=null;
+        antall--;
+        endringer++;
+        return true;
+    }
+        return false;
     }
 
     // TODO: Skjønner ikke, skal verdien fjernes eller hele noden? Gjerne slett hele innholdet i metoden under her
@@ -527,7 +524,7 @@ System.out.println("Fjern midt i "+liste);
         Node<T> current=hode;
 
         if (hode==null){
-            return "";
+            return "[]";
         }
         if (current.neste==null){
             ut.append(hode.verdi);
@@ -555,7 +552,7 @@ System.out.println("Fjern midt i "+liste);
         // System.out.println(hode.verdi);
         //   ut+=""+current.verdi+" ";
         if (hale == null){
-            return "";
+            return "[]";
         }
         if (current.forrige==null){
             ut.append(hale.verdi);
@@ -611,7 +608,6 @@ System.out.println("Fjern midt i "+liste);
         private DobbeltLenketListeIterator(int indeks)
         {
             denne=finnNode(indeks);
-           // denne = hode;     // denne starter på den første i listen
             fjernOK = false;  // blir sann når next() kalles
             iteratorendringer = endringer;  // teller endringer
         }
@@ -632,7 +628,7 @@ System.out.println("Fjern midt i "+liste);
                 throw new NoSuchElementException("Ikke fler igjen i listen");
             }
             fjernOK=true;
-            T verdi=(T)this.denne;
+            T verdi=(T)this.denne.verdi;
             denne=denne.neste;
             return verdi;
         }
@@ -640,25 +636,36 @@ System.out.println("Fjern midt i "+liste);
         @Override
         public void remove() {
             if (!fjernOK) throw new IllegalStateException("Ulovlig tilstand!");
-            if (endringer!=iteratorendringer) throw new ConcurrentModificationException();
+            if (endringer != iteratorendringer) throw new ConcurrentModificationException();
 
-            Node<T> p=denne.forrige;
+            fjernOK=false;
 
-            if (antall==1){
-                hode=hale=null;
-            }
-            else if(denne==null){
-                    hale=hale.forrige;
-                    hale.neste=null;
-            }
-            else if(denne.forrige==hode){
+            Node<T> q=hode;
+
+            if (hode.neste== denne){
                 hode=hode.neste;
-                hode.forrige=null;
+                {
+                    if (denne == null) hale =null;
+                }
             }
-            else{
-                p.forrige.neste=p.neste;
-                p.neste.forrige=p.forrige;
+            else
+            {
+                Node<T> r=hode;
+
+                while (r.neste.neste !=denne){
+                    r=r.neste;
+                }
+                q = r.neste;
+                r.neste=denne;
+                if (denne==null) hale=r;
+
             }
+
+            q.verdi=null;
+            q.neste=null;
+
+            antall--;
+
         }
     } // DobbeltLenketListeIterator
 

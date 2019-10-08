@@ -763,6 +763,7 @@ class DobbeltLenketListeTest {
         liste.fjern("C");
         liste.fjern("E");
 
+
         if (!liste.toString().equals("[]")) {
             antallFeil++;
             System.out.println("Oppgave 6o: Feil i metoden fjern(T)!");

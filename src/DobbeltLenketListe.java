@@ -13,47 +13,6 @@ import java.util.Objects;
 public class DobbeltLenketListe<T> implements Liste<T>
 {
 
-    public static void main (String[] args) {
-        //               0     1    2    3    4    5    6    7    8    9
-       Character[] c = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',};
-      // DobbeltLenketListe<Character> liste = new DobbeltLenketListe<>(c);
-
-DobbeltLenketListe l1=new DobbeltLenketListe(new Integer[]{1});
-System.out.println(l1);
-        DobbeltLenketListe l2=new DobbeltLenketListe(new Integer[]{null});
-        System.out.println(l2);
-  /*liste.fjern(new Character('A'));
-
-    System.out.println("Fjern hode "+liste);
-   liste.fjern(new Character('J'));
-System.out.println("Fjern hale "+liste);
-liste.fjern(new Character('D'));
-System.out.println("Fjern midt i "+liste);
-
-        System.out.println(liste);
-        liste.fjern(0);
-        System.out.println("Hode fjernet med inseks"+liste);
-        liste.fjern(liste.antall-1);
-        System.out.println("HALE fjernet med inseks"+liste);
-        liste.fjern(3);
-        System.out.println("MIDT I fjernet med inseks"+liste);*/
-
-   //liste.nullstill();
-  // System.out.println("Liste etter nullstill"+liste);
-
-
-        String[] navn = {"Lars","Anders","Bodil","Kari","Per","Berit"};
-        Liste<String> liste1 = new DobbeltLenketListe<>(navn);
-        DobbeltLenketListe.sorter(liste1, Comparator.naturalOrder());
-        System.out.println(liste1);
-       // DobbeltLenketListe.sorter(liste2, Comparator.naturalOrder());
-       // DobbeltLenketListe.sorter(liste3, Comparator.naturalOrder());
-        // Utskrift:
-        // Lars Anders Bodil Kari Per Berit
-        // Lars Anders Bodil Kari Per Berit
-
-
-    }
 
     private static final class Node<T>   // en indre nodeklasse
     {
@@ -352,7 +311,7 @@ System.out.println("Fjern midt i "+liste);
 
         // indeks er mellom to noder
         else if(indeks>0 && indeks < antall-1){
-            System.out.print("mellom");
+
             Node gammelNode=finnNode(indeks);
             Node forrige= gammelNode.forrige;
             Node neste = gammelNode.neste;
@@ -630,17 +589,20 @@ System.out.println("Fjern midt i "+liste);
         if (liste.antall() != 1){
 
         for (int j = liste.antall(); j > 0; j--){
-            Iterator<T> iterator = liste.iterator();    //Oppretter ny iterator hver iterasjon
-            int midlertidigMinste = 0;                  //Setter midlertidigMinste til 0.
-            T minsteVerdi = iterator.next();               //Setter midlertidig minsteverdi til første verdi i lenken.
-            for (int i = 1; i < j; i++){                //Itterer gjennom lenken frem til n
-                T verdi = iterator.next();         //Setter verdi lik neste verdi i lenken
-                if (c.compare(verdi,minsteVerdi) < 0){     //Sammenligner minsteverdi med verdi for å se om verdi er mindre
+
+            Iterator<T> iterator = liste.iterator();
+            int midlertidigMinste = 0;
+            T minsteVerdi = iterator.next();
+
+
+            for (int i = 1; i < j; i++){
+                T verdi = iterator.next();
+                if (c.compare(verdi,minsteVerdi) < 0){
                     midlertidigMinste = i;
-                    minsteVerdi = verdi;                   //Dersom verdi er mindre blir minsteverdi oppdatert
+                    minsteVerdi = verdi;
                 }
             }
-            liste.leggInn(liste.fjern(midlertidigMinste));  //Fjerner minste verdien fra lista og legger den til bakerst.
+            liste.leggInn(liste.fjern(midlertidigMinste));
         }
     }
     }

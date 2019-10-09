@@ -9,9 +9,15 @@ public class DobbeltLenketListe<T> implements Liste<T>
 {
 
     public static void main (String[] args) {
-        //               0     1    2    3    4    5    6    7    8    9
+        //
+        long tid = System.currentTimeMillis();
        Character[] c = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',};
-      // DobbeltLenketListe<Character> liste = new DobbeltLenketListe<>(c);
+       DobbeltLenketListe<Character> liste = new DobbeltLenketListe<>(c);
+       liste.nullstill();
+
+        tid = System.currentTimeMillis() - tid;
+        System.out.println(tid);
+
 
 
   /*liste.fjern(new Character('A'));
@@ -34,12 +40,12 @@ System.out.println("Fjern midt i "+liste);
   // System.out.println("Liste etter nullstill"+liste);
 
 
-       String[] navn = {"Lars","Anders","Bodil","Kari","Per","Berit"};
+      /* String[] navn = {"Lars","Anders","Bodil","Kari","Per","Berit"};
         Liste<String> liste = new DobbeltLenketListe<>(navn);
 
       liste.forEach(s -> System.out.print(s + " "));
         System.out.println();
-        for (String s : liste) System.out.print(s + " ");
+        for (String s : liste) System.out.print(s + " ");*/
 
         // Utskrift:
         // Lars Anders Bodil Kari Per Berit
@@ -76,7 +82,7 @@ System.out.println("Fjern midt i "+liste);
     private int antall;            // antall noder i listen
     private int endringer;   // antall endringer i listen
 
-    // hjelpemetode
+    // Oppgave 3//////
     private Node<T> finnNode(int indeks){
 
         Node current=hode;
@@ -205,7 +211,7 @@ System.out.println("Fjern midt i "+liste);
 
     }
 
-    // subliste
+    // OPPGAVE 3 /////
     public Liste<T> subliste(int fra, int til)
     {
         if (fra < 0)                                  // fra er negativ
@@ -249,6 +255,7 @@ System.out.println("Fjern midt i "+liste);
         return false;
     }
 
+    ///// OPPGAVE 2 /////////////
     @Override
     public boolean leggInn(T verdi)
     {
@@ -278,6 +285,8 @@ System.out.println("Fjern midt i "+liste);
 
         return true;
     }
+
+    //////// OPPGAVE 5 ////////////
 
     @Override
     public void leggInn(int indeks, T verdi)
@@ -339,6 +348,7 @@ System.out.println("Fjern midt i "+liste);
         endringer++;
     }
 
+    /////// OPPGAVE 4 ////////
     @Override
     public boolean inneholder(T verdi)
     {
@@ -359,6 +369,7 @@ System.out.println("Fjern midt i "+liste);
       return finnNode(indeks).verdi;
     }
 
+    ///// OPPPGAVE 4 ///////
     @Override
     public int indeksTil(T verdi)
     {
@@ -408,6 +419,7 @@ System.out.println("Fjern midt i "+liste);
 
 
 
+    /////////// OPPGAVE 6 ////////
     @Override
     public boolean fjern(T verdi)
     {
@@ -454,6 +466,7 @@ System.out.println("Fjern midt i "+liste);
     }
 
     // TODO: Skjønner ikke, skal verdien fjernes eller hele noden? Gjerne slett hele innholdet i metoden under her
+   /////////// OPPGAVE 6 ///////
     @Override
     public T fjern(int indeks)
     {
@@ -501,15 +514,34 @@ System.out.println("Fjern midt i "+liste);
 
     }
 
+    ////////////////////// OPPGAVE 7 /////////////////
     @Override
     public void nullstill()
     {
 
+        
 
-        int a=antall;
-        for (int i=0;i<a;i++){
-            fjern(0);
+       Node current=hode;
+
+
+       while (current.neste!=null){
+
+            hode = hode.neste;
+            current.forrige= null;
+
+
+            current = hode;
+            antall--;
+            endringer++;
+
         }
+
+        endringer++;
+        antall--;
+        hale.neste=null;
+        hode.forrige=null;
+        hode=hale=null;
+
 
 
     }

@@ -423,46 +423,44 @@ System.out.println("Fjern midt i "+liste);
     @Override
     public boolean fjern(T verdi)
     {
+        if (verdi == null) return false;
 
-        if (verdi.equals(null)){
-            return false;
-        }
-     Node current=hode;
+        Node<T> current = hode;
 
-        // verdi er hode
-        if (current.verdi.equals(verdi)){
-            // remove hode
-
-                hode=hode.neste;
-                hode.forrige=null;
-
-            antall--;
-            endringer++;
-            return true;
-        }
-
-        while (current.neste!=null){
-            if (current.verdi.equals(verdi)){
-
-             current.forrige.neste=current.neste;
-             current.neste.forrige=current.forrige;
-
-                antall--;
-                endringer++;
-
-                return true;
+        while (current != null) {
+            if (current.verdi.equals(verdi)) {
+                break;
             }
-            current=current.neste;
+
+            current = current.neste;
         }
 
-     if (hale.verdi.equals(verdi)){
-        hale=hale.forrige;
-        hale.neste=null;
+        if (current == null) return false;
+
+        if (current == hode) { // Første node
+            hode = hode.neste;
+
+            if (hode != null) {
+                hode.forrige = null;
+            } else {
+                hale = null;
+            }
+        } else if (current == hale) { // Siste node
+            hale = hale.forrige;
+            hale.neste = null;
+        } else {
+            current.forrige.neste = current.neste;
+            current.neste.forrige = current.forrige;
+        }
+
+        current.verdi = null;
+        current.forrige = current.neste = null;
+
         antall--;
         endringer++;
+
         return true;
-    }
-        return false;
+
     }
 
     // TODO: Skjønner ikke, skal verdien fjernes eller hele noden? Gjerne slett hele innholdet i metoden under her
@@ -470,7 +468,9 @@ System.out.println("Fjern midt i "+liste);
     @Override
     public T fjern(int indeks)
     {
-    indeksKontroll(indeks,false);
+
+
+      indeksKontroll(indeks,false);
 
 
     // ett element

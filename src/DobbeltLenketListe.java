@@ -78,7 +78,7 @@ System.out.println("Fjern midt i "+liste);
     private int antall;            // antall noder i listen
     private int endringer;   // antall endringer i listen
 
-    // hjelpemetode
+    // Oppgave 3//////
     private Node<T> finnNode(int indeks){
 
         Node current=hode;
@@ -226,7 +226,7 @@ System.out.println("Fjern midt i "+liste);
 
     }
 
-    // subliste
+    // OPPGAVE 3 /////
     public Liste<T> subliste(int fra, int til)
     {
         if (fra < 0)                                  // fra er negativ
@@ -270,6 +270,7 @@ System.out.println("Fjern midt i "+liste);
         return false;
     }
 
+    ///// OPPGAVE 2 /////////////
     @Override
     public boolean leggInn(T verdi)
     {
@@ -299,6 +300,8 @@ System.out.println("Fjern midt i "+liste);
 
         return true;
     }
+
+    //////// OPPGAVE 5 ////////////
 
     @Override
     public void leggInn(int indeks, T verdi)
@@ -360,6 +363,7 @@ System.out.println("Fjern midt i "+liste);
         endringer++;
     }
 
+    /////// OPPGAVE 4 ////////
     @Override
     public boolean inneholder(T verdi)
     {
@@ -380,6 +384,7 @@ System.out.println("Fjern midt i "+liste);
       return finnNode(indeks).verdi;
     }
 
+    ///// OPPPGAVE 4 ///////
     @Override
     public int indeksTil(T verdi)
     {
@@ -429,56 +434,58 @@ System.out.println("Fjern midt i "+liste);
 
 
 
+    /////////// OPPGAVE 6 ////////
     @Override
     public boolean fjern(T verdi)
     {
+        if (verdi == null) return false;
 
-        if (verdi.equals(null)){
-            return false;
-        }
-     Node current=hode;
+        Node<T> current = hode;
 
-        // verdi er hode
-        if (current.verdi.equals(verdi)){
-            // remove hode
-
-                hode=hode.neste;
-                hode.forrige=null;
-
-            antall--;
-            endringer++;
-            return true;
-        }
-
-        while (current.neste!=null){
-            if (current.verdi.equals(verdi)){
-
-             current.forrige.neste=current.neste;
-             current.neste.forrige=current.forrige;
-
-                antall--;
-                endringer++;
-
-                return true;
+        while (current != null) {
+            if (current.verdi.equals(verdi)) {
+                break;
             }
-            current=current.neste;
+
+            current = current.neste;
         }
 
-     if (hale.verdi.equals(verdi)){
-        hale=hale.forrige;
-        hale.neste=null;
+        if (current == null) return false;
+
+        if (current == hode) { // Første node
+            hode = hode.neste;
+
+            if (hode != null) {
+                hode.forrige = null;
+            } else {
+                hale = null;
+            }
+        } else if (current == hale) { // Siste node
+            hale = hale.forrige;
+            hale.neste = null;
+        } else {
+            current.forrige.neste = current.neste;
+            current.neste.forrige = current.forrige;
+        }
+
+        current.verdi = null;
+        current.forrige = current.neste = null;
+
         antall--;
         endringer++;
+
         return true;
-    }
-        return false;
+
     }
 
     // TODO: Skjønner ikke, skal verdien fjernes eller hele noden? Gjerne slett hele innholdet i metoden under her
+   /////////// OPPGAVE 6 ///////
     @Override
     public T fjern(int indeks)
     {
-    indeksKontroll(indeks,false);
+
+
+      indeksKontroll(indeks,false);
 
 
     // ett element
@@ -522,78 +529,96 @@ System.out.println("Fjern midt i "+liste);
 
     }
 
+    ////////////////////// OPPGAVE 7 /////////////////
     @Override
     public void nullstill()
     {
 
 
-        int a=antall;
-        for (int i=0;i<a;i++){
-            fjern(0);
+
+       Node current=hode;
+
+
+       while (current.neste!=null){
+
+            hode = hode.neste;
+            current.forrige= null;
+
+
+            current = hode;
+            antall--;
+            endringer++;
+
         }
+
+        endringer++;
+        antall--;
+        hale.neste=null;
+        hode.forrige=null;
+        hode=hale=null;
+
 
 
     }
 
 
+    // oppgave 2
     //TODO: Fiks output med [ og riktig , og mellomrom, syra
     @Override
     public String toString()
     {
-
         StringBuilder ut=new StringBuilder();
-        Node<T> current=hode;
-
-        if (hode==null){
+        Node current=hode;
+        ut.append("[");
+        if (hode ==null){
             return "[]";
         }
         if (current.neste==null){
             ut.append(hode.verdi);
-          return ut.toString();
+            ut.append("]");
+            return ut.toString();
         }
-
-
         while (current.neste!=null){
-
-        ut.append(current.verdi);
+            ut.append(current.verdi);
+            ut.append(", ");
             current=current.neste;
         }
         if (!hode.equals(hale)){
             ut.append(current.verdi);
         }
-
+        ut.append("]");
         return ut.toString();
     }
 
+    // oppgave 2
     public String omvendtString()
     {
-       StringBuilder ut=new StringBuilder();
+        StringBuilder ut=new StringBuilder();
         Node current=hale;
 
-        // System.out.println(hode.verdi);
-        //   ut+=""+current.verdi+" ";
-        if (hale == null){
+        ut.append("[");
+        if (hode == null){
             return "[]";
         }
+
         if (current.forrige==null){
-            ut.append(hale.verdi);
+            ut.append(hale.verdi + "]");
             return ut.toString();
+
         }
-
-
         while (current.forrige!=null){
-           ut.append(current.verdi);
-            //System.out.println(current.verdi);
+            ut.append(current.verdi);
+            ut.append(", ");
+
             current=current.forrige;
         }
         if (!hode.equals(hale)){
             ut.append(current.verdi);
         }
-
+        ut.append("]");
         return ut.toString();
-
-
     }
+
 
     public static <T> void sorter(Liste<T> liste, Comparator<? super T> c)
     {

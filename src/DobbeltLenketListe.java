@@ -13,7 +13,10 @@ public class DobbeltLenketListe<T> implements Liste<T>
        Character[] c = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',};
       // DobbeltLenketListe<Character> liste = new DobbeltLenketListe<>(c);
 
-
+DobbeltLenketListe l1=new DobbeltLenketListe(new Integer[]{1});
+System.out.println(l1);
+        DobbeltLenketListe l2=new DobbeltLenketListe(new Integer[]{null});
+        System.out.println(l2);
   /*liste.fjern(new Character('A'));
 
     System.out.println("Fjern hode "+liste);
@@ -34,13 +37,12 @@ System.out.println("Fjern midt i "+liste);
   // System.out.println("Liste etter nullstill"+liste);
 
 
-       String[] navn = {"Lars","Anders","Bodil","Kari","Per","Berit"};
-        Liste<String> liste = new DobbeltLenketListe<>(navn);
-
-      liste.forEach(s -> System.out.print(s + " "));
-        System.out.println();
-        for (String s : liste) System.out.print(s + " ");
-
+        String[] navn = {"Lars","Anders","Bodil","Kari","Per","Berit"};
+        Liste<String> liste1 = new DobbeltLenketListe<>(navn);
+        DobbeltLenketListe.sorter(liste1, Comparator.naturalOrder());
+        System.out.println(liste1);
+       // DobbeltLenketListe.sorter(liste2, Comparator.naturalOrder());
+       // DobbeltLenketListe.sorter(liste3, Comparator.naturalOrder());
         // Utskrift:
         // Lars Anders Bodil Kari Per Berit
         // Lars Anders Bodil Kari Per Berit
@@ -155,13 +157,24 @@ System.out.println("Fjern midt i "+liste);
     {
         antall=0;
         endringer=0;
-        Objects.requireNonNull(a);
-        if (a.length==0){
-           throw new NullPointerException(("kAN IKKE VÆRE TOM"));
+        Objects.requireNonNull(a, "Tabellen A er null!");
 
+        if (a.length==0){
+
+        hode=hale=null;
+            return;
+        }
+
+        // bare ett element
+
+        if (a.length==1 && a[0]!=null){
+
+            hode=new Node(a[0]);
+            hale=hode;
+            antall++;
+            return;
 
         }
-       // lager tom linket list
         // loop fram til første element som ikke er null
         int teller=0;
         while (a[teller]==null && teller<a.length-1){
@@ -169,12 +182,20 @@ System.out.println("Fjern midt i "+liste);
             teller++;
 
         }
+
+        // hvis bare null lag tom liste
+        if (teller==a.length-1){
+         Node hode=new Node(null);
+         hale=hode;
+         return;
+
+        }
+
+
         // hode er da første element som ikke er null
-       Node<T> hode=new Node(a[teller]);
-        int antall=1;
-       Node hale=hode;
-        this.hode=hode;
-        this.hale=hode;
+      hode=new Node(a[teller]);
+      hale=hode;
+        antall++;
        // lag peker og sett verdi
         Node forrigeNode= hode;
         forrigeNode.verdi=a[teller];
@@ -198,9 +219,9 @@ System.out.println("Fjern midt i "+liste);
             antall++;
 
         }
-        this.antall=antall;
+
         hale.neste=null;
-        this.hale=hale;
+
        // this.hale.verdi=(T)hale.verdi;
 
     }
@@ -576,7 +597,22 @@ System.out.println("Fjern midt i "+liste);
 
     public static <T> void sorter(Liste<T> liste, Comparator<? super T> c)
     {
-        throw new UnsupportedOperationException("Ikke laget ennå!");
+        if (liste.antall() != 1){
+
+        for (int j = liste.antall(); j > 0; j--){
+            Iterator<T> iterator = liste.iterator();    //Oppretter ny iterator hver iterasjon
+            int midlertidigMinste = 0;                  //Setter midlertidigMinste til 0.
+            T minsteVerdi = iterator.next();               //Setter midlertidig minsteverdi til første verdi i lenken.
+            for (int i = 1; i < j; i++){                //Itterer gjennom lenken frem til n
+                T verdi = iterator.next();         //Setter verdi lik neste verdi i lenken
+                if (c.compare(verdi,minsteVerdi) < 0){     //Sammenligner minsteverdi med verdi for å se om verdi er mindre
+                    midlertidigMinste = i;
+                    minsteVerdi = verdi;                   //Dersom verdi er mindre blir minsteverdi oppdatert
+                }
+            }
+            liste.leggInn(liste.fjern(midlertidigMinste));  //Fjerner minste verdien fra lista og legger den til bakerst.
+        }
+    }
     }
 
     @Override

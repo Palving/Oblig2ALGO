@@ -515,64 +515,63 @@ System.out.println("Fjern midt i "+liste);
     }
 
 
+    // oppgave 2
     //TODO: Fiks output med [ og riktig , og mellomrom, syra
     @Override
     public String toString()
     {
-
         StringBuilder ut=new StringBuilder();
-        Node<T> current=hode;
-
-        if (hode==null){
+        Node current=hode;
+        ut.append("[");
+        if (hode ==null){
             return "[]";
         }
         if (current.neste==null){
             ut.append(hode.verdi);
-          return ut.toString();
+            ut.append("]");
+            return ut.toString();
         }
-
-
         while (current.neste!=null){
-
-        ut.append(current.verdi);
+            ut.append(current.verdi);
+            ut.append(", ");
             current=current.neste;
         }
         if (!hode.equals(hale)){
             ut.append(current.verdi);
         }
-
+        ut.append("]");
         return ut.toString();
     }
 
+    // oppgave 2
     public String omvendtString()
     {
-       StringBuilder ut=new StringBuilder();
+        StringBuilder ut=new StringBuilder();
         Node current=hale;
 
-        // System.out.println(hode.verdi);
-        //   ut+=""+current.verdi+" ";
-        if (hale == null){
+        ut.append("[");
+        if (hode == null){
             return "[]";
         }
+
         if (current.forrige==null){
-            ut.append(hale.verdi);
+            ut.append(hale.verdi + "]");
             return ut.toString();
+
         }
-
-
         while (current.forrige!=null){
-           ut.append(current.verdi);
-            //System.out.println(current.verdi);
+            ut.append(current.verdi);
+            ut.append(", ");
+
             current=current.forrige;
         }
         if (!hode.equals(hale)){
             ut.append(current.verdi);
         }
-
+        ut.append("]");
         return ut.toString();
-
-
     }
+
 
     public static <T> void sorter(Liste<T> liste, Comparator<? super T> c)
     {

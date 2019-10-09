@@ -5,6 +5,11 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
+// Magnus Palving Christiansen - s326302
+// Mats Grøsvik - s331405
+// Jon Rafoss - s331379
+
+
 public class DobbeltLenketListe<T> implements Liste<T>
 {
 

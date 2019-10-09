@@ -519,7 +519,7 @@ System.out.println("Fjern midt i "+liste);
     public void nullstill()
     {
 
-        
+
 
        Node current=hode;
 

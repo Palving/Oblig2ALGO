@@ -14,6 +14,25 @@ public class DobbeltLenketListe<T> implements Liste<T>
 {
 
 
+    public static void main (String[] args){
+        DobbeltLenketListe<Integer> liste = new DobbeltLenketListe<>();
+
+        for (int k = 1; k <= 13; k++) {
+            liste.leggInn(k);
+        }
+
+        for (Iterator<Integer> i = liste.iterator(); i.hasNext(); ) {
+            int verdi = i.next();
+            if (verdi % 2 == 1) {
+                i.remove(); // fjerner oddetallene
+            }
+        }
+        System.out.println(liste.toString());
+
+        System.out.println(liste.omvendtString());
+    }
+
+
     private static final class Node<T>   // en indre nodeklasse
     {
         // instansvariabler
@@ -248,6 +267,7 @@ public class DobbeltLenketListe<T> implements Liste<T>
             hale=nyNode;
             hode=nyNode;
             antall++;
+
             return true;
         }
 
@@ -261,7 +281,7 @@ public class DobbeltLenketListe<T> implements Liste<T>
         hale.neste=nyNode;
         hale=nyNode;
         antall++;
-
+        endringer++;
         return true;
     }
 
@@ -527,7 +547,7 @@ public class DobbeltLenketListe<T> implements Liste<T>
 
 
     // oppgave 2
-    //TODO: Fiks output med [ og riktig , og mellomrom, syra
+
     @Override
     public String toString()
     {
@@ -561,7 +581,7 @@ public class DobbeltLenketListe<T> implements Liste<T>
         Node current=hale;
 
         ut.append("[");
-        if (hode == null){
+        if (hale == null){
             return "[]";
         }
 
@@ -573,10 +593,9 @@ public class DobbeltLenketListe<T> implements Liste<T>
         while (current.forrige!=null){
             ut.append(current.verdi);
             ut.append(", ");
-
             current=current.forrige;
         }
-        if (!hode.equals(hale)){
+        if (!hale.equals(hode)){
             ut.append(current.verdi);
         }
         ut.append("]");
@@ -693,6 +712,8 @@ public class DobbeltLenketListe<T> implements Liste<T>
             q.neste=null;
 
             antall--;
+            endringer++;
+            iteratorendringer++;
 
         }
     } // DobbeltLenketListeIterator

@@ -291,23 +291,16 @@ public class DobbeltLenketListe<T> implements Liste<T>
     public void leggInn(int indeks, T verdi)
     {
 
-        if (indeks < 0)                                  // fra er negativ
-            throw new IndexOutOfBoundsException
-                    ("indeks(" + indeks + ") er negativ!");
-
-        if (indeks > antall)                          // til er utenfor tabellen
-            throw new IndexOutOfBoundsException
-                    ("indeks(" + indeks + ") > antall(" + antall + ")");
-
+    if (indeks < 0 || indeks>antall) throw new IndexOutOfBoundsException("Ugyldig indeks");
        // kontroll
-        Objects.requireNonNull(verdi);
-        indeksKontroll(indeks,false);
+        Objects.requireNonNull(verdi, "Verdi kan ikke være null");
+    //   indeksKontroll(indeks,false);
 
 
         // kode
 
         // indeks er på hode
-        if (indeks==(0)){
+        if (indeks==0){
             Node<T> nyNode=new Node(verdi);
             Node gamleHode=this.hode;
 
@@ -382,9 +375,6 @@ public class DobbeltLenketListe<T> implements Liste<T>
        Node current=hode;
 
 
-       if (hale.verdi.equals(verdi)){
-           return antall-1;
-       }
 
        // peker på indeks
         int teller=0;
@@ -396,6 +386,9 @@ public class DobbeltLenketListe<T> implements Liste<T>
            teller++;
        }
 
+        if (hale.verdi.equals(verdi)){
+            return antall-1;
+        }
     return -1;
     }
 
@@ -410,6 +403,7 @@ public class DobbeltLenketListe<T> implements Liste<T>
       indeksKontroll(indeks,false);
         T gammelVerdi=finnNode(indeks).verdi;
         finnNode(indeks).verdi=nyverdi;
+
 
       endringer++;
 
@@ -462,7 +456,7 @@ public class DobbeltLenketListe<T> implements Liste<T>
 
     }
 
-    // TODO: Skjønner ikke, skal verdien fjernes eller hele noden? Gjerne slett hele innholdet i metoden under her
+
    /////////// OPPGAVE 6 ///////
     @Override
     public T fjern(int indeks)
@@ -579,16 +573,14 @@ public class DobbeltLenketListe<T> implements Liste<T>
     {
         StringBuilder ut=new StringBuilder();
         Node current=hale;
-
         ut.append("[");
-        if (hale == null){
+        if (hale ==null){
             return "[]";
         }
-
         if (current.forrige==null){
-            ut.append(hale.verdi + "]");
+            ut.append(hale.verdi);
+            ut.append("]");
             return ut.toString();
-
         }
         while (current.forrige!=null){
             ut.append(current.verdi);

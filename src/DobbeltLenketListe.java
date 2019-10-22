@@ -13,26 +13,6 @@ import java.util.Objects;
 public class DobbeltLenketListe<T> implements Liste<T>
 {
 
-
-    public static void main (String[] args){
-        DobbeltLenketListe<Integer> liste = new DobbeltLenketListe<>();
-
-        for (int k = 1; k <= 13; k++) {
-            liste.leggInn(k);
-        }
-
-        for (Iterator<Integer> i = liste.iterator(); i.hasNext(); ) {
-            int verdi = i.next();
-            if (verdi % 2 == 1) {
-                i.remove(); // fjerner oddetallene
-            }
-        }
-        System.out.println(liste.toString());
-
-        System.out.println(liste.omvendtString());
-    }
-
-
     private static final class Node<T>   // en indre nodeklasse
     {
         // instansvariabler
@@ -291,53 +271,57 @@ public class DobbeltLenketListe<T> implements Liste<T>
     public void leggInn(int indeks, T verdi)
     {
 
-    if (indeks < 0 || indeks>antall) throw new IndexOutOfBoundsException("Ugyldig indeks");
+      if (indeks < 0 || indeks>antall) throw new IndexOutOfBoundsException("Ugyldig indeks");
        // kontroll
         Objects.requireNonNull(verdi, "Verdi kan ikke være null");
-    //   indeksKontroll(indeks,false);
+     // indeksKontroll(indeks,false);
 
-
-        // kode
-
-        // indeks er på hode
-        if (indeks==0){
-            Node<T> nyNode=new Node(verdi);
-            Node gamleHode=this.hode;
-
-            nyNode.forrige=null;
-            nyNode.neste=gamleHode.neste;
+        // tom liste
+        if (antall==0){
+            Node nyNode=new Node(verdi);
+            hode=hale=nyNode;
+            antall++;
+            endringer++;
+        }
+        // hode
+        else if (antall>0 && indeks==0){
+            Node nyNode=new Node(verdi);
+            Node gamleHode=hode;
             hode=nyNode;
+            hode.neste=gamleHode;
+            gamleHode.forrige=hode;
+            hode.forrige=null;
 
+            antall++;
+            endringer++;
         }
-        // indeks er på hale
-        else if (indeks==antall-1){
-
-            Node<T> nyNode=new Node(verdi);
-            Node gamleHale=this.hale;
-
-            // funker men ja..
-            gamleHale.forrige.neste=nyNode;
-            nyNode.neste=null;
-
+        else if (antall>0 && indeks==antall){
+            Node nyNode=new Node(verdi);
+            Node gammelHale=hale;
             hale=nyNode;
-         }
+            hale.forrige=gammelHale;
+            gammelHale.neste=hale;
+            hale.neste=null;
+            antall++;
+            endringer++;
 
-        // indeks er mellom to noder
-        else if(indeks>0 && indeks < antall-1){
-
-            Node gammelNode=finnNode(indeks);
-            Node forrige= gammelNode.forrige;
-            Node neste = gammelNode.neste;
-
-            Node<T> nyNode=new Node(verdi);
-
-            nyNode.forrige=forrige;
-            nyNode.neste= neste;
-
-            forrige.neste=nyNode;
-            neste.forrige=nyNode;
         }
-        endringer++;
+
+        // mellom
+        else if (antall>1 && indeks>0 && indeks<antall){
+            Node nyNode=new Node(verdi);
+            Node gammelNode=finnNode(indeks);
+
+            gammelNode.forrige.neste=nyNode;
+            nyNode.forrige=gammelNode.forrige;
+
+            gammelNode.forrige=nyNode;
+            nyNode.neste=gammelNode;
+            antall++;
+            endringer++;
+
+        }
+
     }
 
     /////// OPPGAVE 4 ////////
@@ -574,22 +558,32 @@ public class DobbeltLenketListe<T> implements Liste<T>
         StringBuilder ut=new StringBuilder();
         Node current=hale;
         ut.append("[");
+
+        // tom
         if (hale ==null){
             return "[]";
         }
+        // bare en verdi
         if (current.forrige==null){
             ut.append(hale.verdi);
             ut.append("]");
             return ut.toString();
         }
         while (current.forrige!=null){
-            ut.append(current.verdi);
-            ut.append(", ");
+            if (current.verdi!=null && current!=hode ){
+                ut.append(current.verdi);
+                ut.append(", ");
+            }
+
             current=current.forrige;
         }
-        if (!hale.equals(hode)){
-            ut.append(current.verdi);
+        if (hode!=null){
+            ut.append(hode.verdi);
         }
+     //   if (!hale.equals(hode)){
+         //   if (current.verdi!=null) ut.append(current.verdi);
+
+       // }
         ut.append("]");
         return ut.toString();
     }
